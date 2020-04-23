@@ -1,0 +1,51 @@
+# .gitignore se-carrental-webservice
+
+# directories
+.idea/
+.eclipse/
+target/
+
+# files
+*.class
+*.jar
+*.war
+*.ear
+*.logs
+*.log
+*.iml
+*.zip
+*.rar
+*.tar
+*.tar.gz
+*.tar.bz2
+.eclipse
+.DS_Store
+
+# Java related
+target/**
+*.jar
+*.war
+*.ear
+*.class
+
+# eclipse specific
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
