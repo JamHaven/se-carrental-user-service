@@ -98,6 +98,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //.headers().addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin","*")).and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers("/users/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/registration").permitAll()
                 .antMatchers("/h2-console/*").permitAll()

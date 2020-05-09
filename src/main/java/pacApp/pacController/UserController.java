@@ -2,6 +2,9 @@ package pacApp.pacController;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +28,22 @@ public class UserController extends BaseRestController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserRepository repository;
 
+    @Autowired
+    private DiscoveryClient discoveryClient;
+
     public UserController(UserRepository repository) {
         this.repository = repository;
+    }
+
+    @RequestMapping("/service-instances/{applicationName}")
+    public List<ServiceInstance> serviceInstancesByApplicationName(@PathVariable String applicationName) {
+        return this.discoveryClient.getInstances(applicationName);
     }
 
     @CrossOrigin
     @GetMapping("/users")
     public ResponseEntity getAllUsers(){
+        /*
         String userEmail = super.getAuthentication().getName();
 
         Optional<User> optUser = this.repository.findOneByEmail(userEmail);
@@ -51,6 +63,7 @@ public class UserController extends BaseRestController {
             GenericResponse response = new GenericResponse(HttpStatus.FORBIDDEN.value(),"Request forbidden");
             return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
+        */
 
         List<User> users = this.repository.findAll();
 

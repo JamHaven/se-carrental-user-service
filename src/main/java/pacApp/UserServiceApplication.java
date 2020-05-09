@@ -7,10 +7,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-
 @EnableDiscoveryClient
 @SpringBootApplication
-public class WebServerMachine {
+public class UserServiceApplication {
 
 	@Bean
 	public PasswordEncoder getPasswordEncoder(){
@@ -18,6 +17,6 @@ public class WebServerMachine {
 	}
 
 	public static void main(String... args) {
-		SpringApplication.run(WebServerMachine.class, args);
+		SpringApplication.run(UserServiceApplication.class, args);
 	}
 }

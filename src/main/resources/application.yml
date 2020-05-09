@@ -1,38 +1,26 @@
 server:
-#  application:
-#    name: authorization-service
-  port: 443 #3333
+  #application:
+  #  name: user-service
+  port: 3333 #443
   forward-headers-strategy: FRAMEWORK
-
 # register service registry (discovery server)
-#eureka:
-#  client:
-#    serviceUrl:
-#      defaultZone: http://server:1111/eureka
-
-# service registry config
 eureka:
-  instance:
-    hostname: localhost
-  client: #not a client
-    registerWithEureka: false
-    fetchRegistry: false
-
-
+  client:
+    #serviceUrl:
+    service-url:
+      defaultZone: http://user:password@localhost:1111/eureka
 logging:
   level:
-    root: ERROR
-    org.springframework.web: ERROR
-    com.netflix.eureka: ERROR
-    com.netflix.discovery: ERROR
-
+    root: INFO
+    org.springframework.web: INFO
+    com.netflix.eureka: INFO
+    com.netflix.discovery: INFO
 spring:
   jpa:
     hibernate:
       ddl-auto: update
       format_sql: true
   show-sql: true
-
   h2:
   console:
     enabled: true
