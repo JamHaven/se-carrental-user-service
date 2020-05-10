@@ -6,9 +6,12 @@ server:
 # register service registry (discovery server)
 eureka:
   client:
-    #serviceUrl:
-    service-url:
+    registerWithEureka: true
+    fetchRegistry: false
+    serviceUrl:
       defaultZone: http://user:password@localhost:1111/eureka
+    healthcheck:
+      enabled: false
 logging:
   level:
     root: INFO
