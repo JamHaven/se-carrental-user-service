@@ -5,11 +5,15 @@ server:
   forward-headers-strategy: FRAMEWORK
 # register service registry (discovery server)
 eureka:
+  instance:
+    hostname: user-service.northeurope.azurecontainer.io
+    #prefer-ip-address: true
   client:
     registerWithEureka: true
     fetchRegistry: false
     serviceUrl:
-      defaultZone: http://user:password@carrental-registry.northeurope.azurecontainer.io:1111/eureka
+      #defaultZone: http://user:password@carrental-registry.northeurope.azurecontainer.io:1111/eureka
+      defaultZone: https://user:password@carrental-registry.azurewebsites.net:443/eureka
     healthcheck:
       enabled: false
 logging:
