@@ -18,15 +18,27 @@ logging:
     org.springframework.web: INFO
     com.netflix.eureka: INFO
     com.netflix.discovery: INFO
+#spring:
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#      format_sql: true
+#  show-sql: true
+#  h2:
+#  console:
+#    enabled: true
+
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: update
-      format_sql: true
-  show-sql: true
-  h2:
-  console:
-    enabled: true
+   datasource:
+     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+     password: IchBinSuper!
+     url: jdbc:sqlserver://carrental.database.windows.net:1433;database=carrentalDB;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+     username: supermario
+   jpa:
+     hibernate:
+         ddl-auto: create-drop
+         dialect: org.hibernate.dialect.SQLServer2012Dialect
+     show-sql: true
 
 jwt:
   header: Authorization
