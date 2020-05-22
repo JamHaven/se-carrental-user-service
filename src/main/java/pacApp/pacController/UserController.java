@@ -76,15 +76,7 @@ public class UserController extends BaseRestController {
     @RequestMapping(value = "/user", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUserInfo() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (!(auth instanceof JwtAuthenticatedProfile)) {
-            GenericResponse response = new GenericResponse(HttpStatus.FORBIDDEN.value(),"Authentication failure");
-            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-        }
-
-        JwtAuthenticatedProfile authenticatedProfile = (JwtAuthenticatedProfile) auth;
-        String userEmail = authenticatedProfile.getName();
+        String userEmail = super.getAuthentication().getName();
 
         Optional<User> optUser = this.repository.findOneByEmail(userEmail);
 

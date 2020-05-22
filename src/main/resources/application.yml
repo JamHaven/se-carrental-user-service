@@ -43,4 +43,4 @@ soapWebservice:
   user: Admin
   password: pa$$w0rd
 allow:
-  origin: localhost
+  origin: "*"
