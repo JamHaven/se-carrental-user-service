@@ -9,7 +9,10 @@ eureka:
     registerWithEureka: true
     fetchRegistry: false
     serviceUrl:
-      defaultZone: http://user:password@localhost:1111/eureka
+      #defaultZone: http://user:password@localhost:1111/eureka
+      #defaultZone: http://localhost:1111/eureka
+      #defaultZone: http://user:password@carrental-registry.northeurope.azurecontainer.io:1111/eureka
+      defaultZone: https://carrental-registry.azurewebsites.net:443/eureka
     healthcheck:
       enabled: false
 logging:
@@ -18,36 +21,26 @@ logging:
     org.springframework.web: INFO
     com.netflix.eureka: INFO
     com.netflix.discovery: INFO
-#spring:
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#      format_sql: true
-#  show-sql: true
-#  h2:
-#  console:
-#    enabled: true
-
 spring:
-   datasource:
-     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-     password: IchBinSuper!
-     url: jdbc:sqlserver://carrental.database.windows.net:1433;database=carrentalDB;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
-     username: supermario
-   jpa:
-     hibernate:
-         ddl-auto: create-drop
-         dialect: org.hibernate.dialect.SQLServer2012Dialect
-     show-sql: true
-
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    password: IchBinSuper!
+    url: jdbc:sqlserver://carrental.database.windows.net:1433;database=carrentalDB;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    username: supermario
+  jpa:
+    hibernate:
+    ddl-auto: create-drop
+    dialect: org.hibernate.dialect.SQLServer2012Dialect
+    show-sql: true
+  #h2:
+    #console:
+      #enabled: true
 jwt:
   header: Authorization
   secret: 3ef572f7769d78d
   expiration: 7200
-
 soapWebservice:
   user: Admin
   password: pa$$w0rd
-
 allow:
   origin: localhost
