@@ -32,8 +32,12 @@ spring:
     username: supermario
   jpa:
     hibernate:
-    ddl-auto: create-drop
-    dialect: org.hibernate.dialect.SQLServer2012Dialect
+      # use "create" or "create-drop" when you wish to recreate database on restart
+      # use "update" or "validate" when data is to be kept
+      ddl-auto: update
+      dialect: org.hibernate.dialect.SQLServer2012Dialect
+    properties:
+      hibernate.format_sql: true
     show-sql: true
   #h2:
     #console:

@@ -46,7 +46,6 @@ public class UserController extends BaseRestController {
     @CrossOrigin
     @GetMapping("/users")
     public ResponseEntity getAllUsers(){
-        /*
         String userEmail = super.getAuthentication().getName();
 
         Optional<User> optUser = this.repository.findOneByEmail(userEmail);
@@ -61,12 +60,12 @@ public class UserController extends BaseRestController {
         //TODO: implement user roles
 
         long userId = user.getId();
+        String email = user.getEmail();
 
-        if (userId != 1L) {
+        if (userId != 1L && !email.equals("admin@carrental.com")) {
             GenericResponse response = new GenericResponse(HttpStatus.FORBIDDEN.value(),"Request forbidden");
             return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
-        */
 
         List<User> users = this.repository.findAll();
 
@@ -203,6 +202,5 @@ public class UserController extends BaseRestController {
 
         return userInfo;
     }
-
 
 }

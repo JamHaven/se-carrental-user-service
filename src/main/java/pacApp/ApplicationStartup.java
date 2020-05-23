@@ -14,6 +14,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
 
@@ -31,10 +34,26 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
         log.info(event.toString());
         //this.repository.deleteAll();
 
+        List<User> users = this.repository.findAll();
+
+        if(users != null) {
+            log.info("users.count:" + users.size());
+            for(User user : users) {
+                log.info(user.toString());
+            }
+        }
+
         User superuser = this.repository.findById(1L);
 
         if (superuser != null) {
             log.info("superuser: " + superuser.toString());
+            return;
+        }
+
+        Optional<User> optSuperUser = this.repository.findOneByEmail("admin@carrental.com");
+
+        if (optSuperUser.isPresent()) {
+            log.info("superuser: " + optSuperUser.get().toString());
             return;
         }
 
