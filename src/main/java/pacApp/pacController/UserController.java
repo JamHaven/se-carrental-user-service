@@ -1,5 +1,7 @@
 package pacApp.pacController;
 
+import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.commons.validator.routines.RegexValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +14,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import pacApp.pacData.UserRepository;
+import pacApp.pacException.RegistrationBadRequestException;
+import pacApp.pacLogic.Constants;
 import pacApp.pacModel.Currency;
 import pacApp.pacModel.User;
-import pacApp.pacModel.request.Booking;
 import pacApp.pacModel.request.UserInfo;
 import pacApp.pacModel.response.GenericResponse;
 import pacApp.pacSecurity.JwtAuthenticatedProfile;
@@ -43,7 +46,6 @@ public class UserController extends BaseRestController {
     @CrossOrigin
     @GetMapping("/users")
     public ResponseEntity getAllUsers(){
-        /*
         String userEmail = super.getAuthentication().getName();
 
         Optional<User> optUser = this.repository.findOneByEmail(userEmail);
@@ -58,12 +60,12 @@ public class UserController extends BaseRestController {
         //TODO: implement user roles
 
         long userId = user.getId();
+        String email = user.getEmail();
 
-        if (userId != 1L) {
+        if (userId != 1L && !email.equals("admin@carrental.com")) {
             GenericResponse response = new GenericResponse(HttpStatus.FORBIDDEN.value(),"Request forbidden");
             return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
-        */
 
         List<User> users = this.repository.findAll();
 
@@ -73,15 +75,7 @@ public class UserController extends BaseRestController {
     @RequestMapping(value = "/user", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUserInfo() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (!(auth instanceof JwtAuthenticatedProfile)) {
-            GenericResponse response = new GenericResponse(HttpStatus.FORBIDDEN.value(),"Authentication failure");
-            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-        }
-
-        JwtAuthenticatedProfile authenticatedProfile = (JwtAuthenticatedProfile) auth;
-        String userEmail = authenticatedProfile.getName();
+        String userEmail = super.getAuthentication().getName();
 
         Optional<User> optUser = this.repository.findOneByEmail(userEmail);
 
@@ -97,6 +91,48 @@ public class UserController extends BaseRestController {
         return new ResponseEntity<>(userInfo, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/user", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse> registerUser(@RequestBody User user){
+        log.info("registerUser: " + user.toString());
+
+        if (user.getEmail() == null || user.getPassword() == null) {
+            throw new RegistrationBadRequestException();
+        }
+
+        EmailValidator emailValidator = EmailValidator.getInstance();
+
+        if (!emailValidator.isValid(user.getEmail())) {
+            throw new RegistrationBadRequestException();
+        }
+
+        Optional<User> optUser = this.repository.findOneByEmail(user.getEmail());
+
+        if (optUser.isPresent()){
+            GenericResponse response = new GenericResponse(HttpStatus.CONFLICT.value(),"User already registered");
+            return new ResponseEntity<>(response,HttpStatus.CONFLICT);
+        }
+
+        RegexValidator validator = new RegexValidator("((?=.*[a-z])(?=.*\\d)(?=.*[@#$%])(?=.*[A-Z]).{6,16})");
+
+        if (!validator.isValid(user.getPassword())) {
+            throw new RegistrationBadRequestException();
+        }
+
+        if (user.getDefaultCurrency() == null) {
+            user.setDefaultCurrency(Constants.SERVICE_CURRENCY);
+        }
+
+        user.setId(0L);
+
+        this.repository.saveUser(user);
+
+        GenericResponse response = new GenericResponse(HttpStatus.OK.value(), "User registration successful");
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/user", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -106,15 +142,7 @@ public class UserController extends BaseRestController {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (!(auth instanceof JwtAuthenticatedProfile)) {
-            GenericResponse response = new GenericResponse(403,"Authentication failure");
-            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-        }
-
-        JwtAuthenticatedProfile authenticatedProfile = (JwtAuthenticatedProfile) auth;
-        String userEmail = authenticatedProfile.getName();
+        String userEmail = super.getAuthentication().getName();
 
         Optional<User> optUser = this.repository.findOneByEmail(userEmail);
 
@@ -174,6 +202,5 @@ public class UserController extends BaseRestController {
 
         return userInfo;
     }
-
 
 }

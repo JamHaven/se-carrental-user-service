@@ -3,9 +3,13 @@ package pacApp.pacModel;
 import javax.persistence.*;
 import java.util.Objects;
 
+/**
+ * change table name from user to carrentalUser, because the user 
+ * name is reserved from SQL
+ */
 @Entity
-@Table(name = "User")
-public class User implements Cloneable {
+@Table(name = "CarrentalUser")
+public class User implements Cloneable{
 
     @Id
     //@GeneratedValue(strategy = GenerationType.AUTO)
